@@ -1,0 +1,156 @@
+[{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c57c"
+  },
+  "id": 1,
+  "username": "Mai Quốc Trường",
+  "password": "123",
+  "avatar": "https://randomuser.me/api/portraits/men/1.jpg",
+  "email": "maiquoctruong2403@gmail.com",
+  "role": "Admin",
+  "birthday": {
+    "$date": "2004-12-08T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c57d"
+  },
+  "id": 2,
+  "username": "Jane Smith",
+  "password": "123",
+  "avatar": "https://randomuser.me/api/portraits/women/2.jpg",
+  "email": "jane@example.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2014-11-04T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c57e"
+  },
+  "id": 3,
+  "username": "Mai Truong Mai",
+  "password": "123456789",
+  "avatar": "http://localhost:3000/uploads/1733755381641.jpeg",
+  "email": "maitruong24113@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2004-01-01T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c57f"
+  },
+  "id": 4,
+  "username": "aaa",
+  "password": "123",
+  "avatar": "http://localhost:3000/uploads/1733720765746.jpg",
+  "email": "aa@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2024-11-02T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c580"
+  },
+  "id": 5,
+  "username": "bb chang",
+  "password": "12345",
+  "avatar": "http://localhost:3000/uploads/1733759454248.jpg",
+  "email": "nbbchang@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2003-01-12T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c581"
+  },
+  "id": 6,
+  "username": "Karina Aespa",
+  "password": "123456",
+  "avatar": "http://localhost:3000/uploads/1733760199651.jpg",
+  "email": "karina13233@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2003-08-25T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c582"
+  },
+  "id": 7,
+  "username": "Winter",
+  "password": "123",
+  "avatar": "http://localhost:3000/uploads/1733761871634.jpg",
+  "email": "winter123@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2003-08-07T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c583"
+  },
+  "id": 8,
+  "username": "Ningning",
+  "password": "12345",
+  "avatar": "http://localhost:3000/uploads/1733762668760.jpg",
+  "email": "ning@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2005-07-19T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "67575e4f6ebdf8a15c32c584"
+  },
+  "id": 9,
+  "username": "Giselle",
+  "password": "123",
+  "avatar": "http://localhost:3000/uploads/1733763887126.jpg",
+  "email": "giselle123456@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2006-03-16T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "675766dd9c92d98f7a00aa3a"
+  },
+  "username": "Thuận",
+  "password": "thuan123",
+  "email": "thuan@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2004-01-23T00:00:00.000Z"
+  },
+  "avatar": "http://localhost:3000/uploads/1733781213848.jpg",
+  "id": 10,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "675766fe9c92d98f7a00aa3f"
+  },
+  "username": "Thiện Lê Trọng",
+  "password": "123",
+  "email": "thien333@gmail.com",
+  "role": "User",
+  "birthday": {
+    "$date": "2003-03-29T00:00:00.000Z"
+  },
+  "avatar": "http://localhost:3000/uploads/1733781783463.png",
+  "id": 11,
+  "__v": 0
+}]
