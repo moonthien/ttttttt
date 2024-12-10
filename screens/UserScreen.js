@@ -22,10 +22,20 @@ export default function UserScreen() {
   const [role, setRole] = useState('');
   const [birthday, setBirthday] = useState(new Date());
 
+  const handleAddImageUrls = () => {
+    const newImageUrls = [
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733845765/IMG_1233_mkmasu.jpg',
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733841681/GOYX4963_ieiskz.jpg',
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733845771/IMG_1234_abcd.jpg',
+    ];
+  
+    setImageUrls((prevImageUrls) => [...prevImageUrls, ...newImageUrls]);
+  };
+
   // Hàm lấy dữ liệu người dùng từ API
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/users'); // Địa chỉ API của danh sach user
+      const response = await axios.get('https://6758675a60576a194d10606b.mockapi.io/oncuoiki'); // Địa chỉ API của danh sach user
       setUsers(response.data);
     } catch (error) {
       console.error('Lỗi khi lấy dữ liệu người dùng:', error);
@@ -45,58 +55,106 @@ export default function UserScreen() {
     );
   };
 
-  const handleImagePicker = async () => {
-    if (Platform.OS === 'web') {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-          setImageUri(URL.createObjectURL(file));
-          setImageFile(file);
-        }
-      };
-      input.click();
-    } else {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+  // const handleImagePicker = async () => {
+  //   if (Platform.OS === 'web') {
+  //     const input = document.createElement('input');
+  //     input.type = 'file';
+  //     input.accept = 'image/*';
+  //     input.onchange = (event) => {
+  //       const file = event.target.files[0];
+  //       if (file) {
+  //         setImageUri(URL.createObjectURL(file));
+  //         setImageFile(file);
+  //       }
+  //     };
+  //     input.click();
+  //   } else {
+  //     const result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //       allowsEditing: true,
+  //       aspect: [4, 3],
+  //       quality: 1,
+  //     });
 
-      if (!result.canceled) {
-        setImageUri(result.assets[0].uri);
-        setImageFile({
-          uri: result.assets[0].uri,
-          type: 'image/png',
-          name: 'avatar.png',
-        });
-      }
-    }
+  //     if (!result.canceled) {
+  //       setImageUri(result.assets[0].uri);
+  //       setImageFile({
+  //         uri: result.assets[0].uri,
+  //         type: 'image/png',
+  //         name: 'avatar.png',
+  //       });
+  //     }
+  //   }
+  // };
+
+  // const handleImagePicker = async () => {
+  //   // Danh sách các link ảnh từ Cloudinary
+  //   const cloudinaryImageLinks = [
+  //     'https://res.cloudinary.com/dh88asro9/image/upload/v1733845765/IMG_1233_mkmasu.jpg',
+  //     'https://res.cloudinary.com/dh88asro9/image/upload/v1733845746/FOIL4327_dwphfp.jpg',
+  //     'https://res.cloudinary.com/dh88asro9/image/upload/v1733841681/GOYX4963_ieiskz.jpg',
+  //   ];
+  
+  //   // Cập nhật một mảng để lưu tất cả các ảnh
+  //   const images = cloudinaryImageLinks.map((link) => ({
+  //     uri: link,
+  //     type: 'image/jpeg',  // Giả sử tất cả là ảnh JPEG
+  //     name: link.split('/').pop(),  // Lấy tên ảnh từ link URL
+  //   }));
+  
+  //   // Cập nhật state với tất cả các ảnh
+  //   setImageFile(images);
+  
+  //   // Nếu bạn muốn hiển thị ảnh ngay lập tức, bạn có thể gọi setImageUri cho từng ảnh
+  //   images.forEach((image) => {
+  //     setImageUri(image.uri);
+  //   });
+  // };
+  
+  const handleImagePicker = async () => {
+    // Danh sách các link ảnh từ Cloudinary
+    const cloudinaryImageLinks = [
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733845765/IMG_1233_mkmasu.jpg',
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733845746/FOIL4327_dwphfp.jpg',
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733841681/GOYX4963_ieiskz.jpg',
+    ];
+  
+    // Mở picker để chọn ảnh
+    setImageUri(cloudinaryImageLinks[0]); // Mặc định chọn ảnh đầu tiên
+    setImageFile(cloudinaryImageLinks); // Cập nhật tất cả các ảnh vào state
   };
+  
+  const handleImageChange = (selectedImageUri) => {
+    setImageUri(selectedImageUri); // Cập nhật ảnh đã chọn vào state
+  };
+  
+  
 
   const handleAddUser = async () => {
     try {
-      if (!username || !password || !email || !role || !imageUri) {
+      if (!username || !password || !email || !role ) {
         alert('Vui lòng nhập đầy đủ thông tin!');
         return;
       }
 
-      const data = new FormData();
+      const data = new URLSearchParams();
+
       data.append('username', username);
       data.append('password', password);
       data.append('email', email);
       data.append('role', role);
       data.append('birthday', birthday.toISOString().split('T')[0]);
-      if (imageFile) {
-        data.append('avatar', imageFile);
-      }
-
-      const response = await axios.post('http://localhost:3000/users/add', data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      data.append('avatar', imageUri);
+     // data.append('avatar', "https://res.cloudinary.com/dh88asro9/image/upload/v1733841681/GOYX4963_ieiskz.jpg");
+      
+      const response = await axios.post(
+        'https://6758675a60576a194d10606b.mockapi.io/oncuoiki',
+        data.toString(), // Chuyển dữ liệu thành chuỗi URL-encoded
+        {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }
+      );
+      
 
       if (response.status === 201) {
         alert('Thêm user thành công!');
@@ -118,21 +176,23 @@ export default function UserScreen() {
   };
 
   // Handle delete user
-  const handleDeleteUser = async (username) => {
+  // Handle delete user
+  const handleDeleteUser = async (id) => {
     try {
-      const response = await axios.delete('http://localhost:3000/delete-user', {
-        data: { username }
-      });
-
+      console.log('id', id);
+      const response = await axios.delete(`https://6758675a60576a194d10606b.mockapi.io/oncuoiki/${id}`);
+  
       if (response.status === 200) {
         alert('Xóa user thành công');
-        fetchUsers();
+        fetchUsers(); // Gọi lại để cập nhật danh sách sau khi xóa
       }
     } catch (error) {
       console.error('Lỗi xóa user:', error);
-      alert('Không xóa user được');
+      alert('Không xóa được user');
     }
   };
+  
+
 
   const renderUserRow = ({ item }) => (
     <TouchableOpacity
@@ -151,7 +211,7 @@ export default function UserScreen() {
       </View>
       <TouchableOpacity 
         style={styles.deleteIconContainer} 
-        onPress={() => handleDeleteUser(item.username)}
+        onPress={() => handleDeleteUser(item.id)}
       >
         <MaterialIcons name="delete" size={24} color="red" />
       </TouchableOpacity>
@@ -215,13 +275,29 @@ export default function UserScreen() {
             <Picker.Item label="User" value="User" />
           </Picker>
         </View>
-
         <TouchableOpacity style={styles.imagePickerButton} onPress={handleImagePicker}>
-          <Text style={styles.imagePickerText}>Upload Image</Text>
-        </TouchableOpacity>
-        {imageUri && (
-          <Image source={{ uri: imageUri }} style={styles.previewImage} />
-        )}
+  <Text style={styles.imagePickerText}>Upload Image</Text>
+</TouchableOpacity>
+
+{/* Picker để chọn ảnh */}
+{imageFile && (
+  <Picker
+    selectedValue={imageUri}
+    onValueChange={handleImageChange}
+    style={{ height: 50, marginBottom: 20 }}
+  >
+    {imageFile.map((uri, index) => (
+      <Picker.Item key={index} label={`Image ${index + 1}`} value={uri} />
+    ))}
+  </Picker>
+)}
+
+{/* Hiển thị ảnh đã chọn */}
+{imageUri && (
+  <Image source={{ uri: imageUri }} style={{ width: 100, height: 100 }} />
+)}
+
+
 
         <TouchableOpacity style={styles.addButton} onPress={handleAddUser}>
           <Text style={styles.addText}>Add user</Text>

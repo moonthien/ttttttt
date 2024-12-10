@@ -12,31 +12,55 @@ const LoginScreen = () => {
     const [isFocusedEmail, setIsFocusedEmail] = useState(false);
     const [isFocusedPassword, setIsFocusedPassword] = useState(false);
     
-    // Hàm xử lý khi nhấn nút Login
+    // // Hàm xử lý khi nhấn nút Login
+    // const handleLogin = async () => {
+    //     try {
+    //         const response = await axios.post('https://6758675a60576a194d10606b.mockapi.io/oncuoiki', {
+    //             email,
+    //             password,
+    //         });
+    //         if (response.status === 200) {
+    //             const user = response.data.user;
+    //             if (user.role === 'Admin') {
+    //                 navigation.navigate("UserScreen", { admin: user });
+    //             } else {
+    //                 navigation.navigate("Screen01", { user: user });
+    //             }
+    //         } else {
+    //             alert('Vai trò không hợp lệ.');
+    //         }
+    //     } catch (error) {
+    //         if (error.response && error.response.status === 401) {
+    //             alert('Email hoặc mật khẩu không đúng. Vui lòng thử lại.');
+    //         } else {
+    //             alert('Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau.');
+    //         }
+    //     }
+    // };   
+    
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/login', {
-                email,
-                password,
-            });
-            if (response.status === 200) {
-                const user = response.data.user;
-                if (user.role === 'Admin') {
-                    navigation.navigate("UserScreen", { admin: user });
-                } else {
-                    navigation.navigate("Screen01", { user: user });
-                }
-            } else {
-                alert('Vai trò không hợp lệ.');
+          // Fetch users from the mock API
+          const response = await axios.get('https://6758675a60576a194d10606b.mockapi.io/oncuoiki');
+          const users = response.data;
+    
+          // Find user by email and password
+          const user = users.find(u => u.email === email && u.password === password);
+    
+          if (user) {
+            if (user.role === 'Admin') {
+                navigation.navigate("UserScreen", { admin: user });
+            } else if (user.role === 'User') {
+                navigation.navigate("Screen01", { user: user });
             }
+          } else {
+            alert('Invalid credentials', 'Please check your email or password');
+          }
         } catch (error) {
-            if (error.response && error.response.status === 401) {
-                alert('Email hoặc mật khẩu không đúng. Vui lòng thử lại.');
-            } else {
-                alert('Đã xảy ra lỗi máy chủ. Vui lòng thử lại sau.');
-            }
+          console.error('Login error:', error);
+          alert('Error', 'An error occurred while logging in');
         }
-    };    
+      };
 
     return (
         <View style={styles.container}>

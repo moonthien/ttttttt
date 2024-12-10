@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  ScrollView
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DatePicker from "react-datepicker";
@@ -28,83 +29,76 @@ export default function ViewUserScreen({ route }) {
   const [imageUri, setImageUri] = useState(null);
   const [imageFile, setImageFile] = useState(null);
 
+
   const handleImagePicker = async () => {
-    if (Platform.OS === 'web') {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.onchange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-          const newImageUri = URL.createObjectURL(file);
-          setImageUri(newImageUri);
-          setAvatar(newImageUri); // Cập nhật avatar ngay lập tức
-          setImageFile(file);
-        }
-      };
-      input.click();
-    } else {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
+    // Danh sách các link ảnh từ Cloudinary
+    const cloudinaryImageLinks = [
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733845765/IMG_1233_mkmasu.jpg',
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733845746/FOIL4327_dwphfp.jpg',
+      'https://res.cloudinary.com/dh88asro9/image/upload/v1733841681/GOYX4963_ieiskz.jpg',
+    ];
   
-      if (!result.canceled) {
-        const newImageUri = result.assets[0].uri;
-        setImageUri(newImageUri);
-        setAvatar(newImageUri); // Cập nhật avatar ngay lập tức
-        setImageFile({
-          uri: newImageUri,
-          type: 'image/jpeg',
-          name: 'avatar.jpg',
-        });
-      }
-    }
+    // Mở picker để chọn ảnh
+    setImageUri(cloudinaryImageLinks[0]); // Mặc định chọn ảnh đầu tiên
+    setImageFile(cloudinaryImageLinks); // Cập nhật tất cả các ảnh vào state
   };
+  
+  const handleImageChange = (selectedImageUri) => {
+    setImageUri(selectedImageUri); // Cập nhật ảnh đã chọn vào state
+  };
+  
 
   const handleSave = async () => {
-    const formData = new FormData();
-    // formData id ở dưới là dành cho MYSQL
-    formData.append('id', user.id);
-
-    // formData _id ở dưới là dành cho MONGODB
-    // formData.append('_id', user._id);
-    formData.append('username', username);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('role', role);
-    const localDate = birthday.toLocaleDateString('en-CA');
-    formData.append('birthday', localDate);
+    const data = new URLSearchParams();
+    // Use user.id from route params for the correct URL
+    data.append('id', user.id);
   
-    if (imageFile) {
-        formData.append('avatar', imageFile);
-    } else {
-        formData.append('avatar', avatar);
-    }
+    data.append('username', username);
+    data.append('email', email);
+    data.append('password', password);
+    data.append('role', role);
+    const localDate = birthday.toLocaleDateString('en-CA');
+    data.append('birthday', localDate);
+ 
+      data.append('avatar', imageUri); 
+   
   
     try {
-      const response = await axios.put('http://localhost:3000/update-user', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      // Use the correct user ID in the URL for the API call
+      const response = await axios.put(`https://6758675a60576a194d10606b.mockapi.io/oncuoiki/${user.id}`, data.toString(), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
   
-      alert('Thành công');
+      alert('Update successful');
       console.log(response.data);
       navigation.goBack();
     } catch (error) {
-      alert('Lỗi cập nhật user: ' + error.message);
+      alert('Error updating user: ' + error.message);
     }
-  };  
+  };
+  
 
   return (
+    <ScrollView style={{ width: "100%", height: 500 }}>
     <View style={styles.container}>
-      <TouchableOpacity onPress={handleImagePicker}>
+    <TouchableOpacity onPress={handleImagePicker}>
         <Image
           source={{ uri: imageUri || avatar }}
           style={styles.avatar}
         />
       </TouchableOpacity>
+
+      {imageFile && (
+        <Picker
+          selectedValue={imageUri}  // Đảm bảo selectedValue liên kết đúng với imageUri
+          onValueChange={handleImageChange}  // Khi người dùng chọn ảnh mới, cập nhật imageUri
+          style={{ height: 50, marginBottom: 20 }}
+        >
+          {imageFile.map((uri, index) => (
+            <Picker.Item key={index} label={`Image ${index + 1}`} value={uri} />
+          ))}
+        </Picker>
+      )}
 
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Username</Text>
@@ -161,6 +155,7 @@ export default function ViewUserScreen({ route }) {
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
     </View>
+    </ScrollView>
   );
 }
 
